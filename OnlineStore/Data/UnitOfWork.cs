@@ -26,6 +26,8 @@ namespace OnlineStore.Data
 
         public IReviewRepository ReviewRepository => new ReviewRepository(_context, _mapper);
 
+        public IOrderRepository OrderRepository => new OrderRepository(_context, _mapper);
+
         public async Task<bool> Complete()
         {
             return await _context.SaveChangesAsync() > 0;

@@ -18,7 +18,6 @@ namespace OnlineStore.Entities
         public int UserId { get; set; }
         public User User { get; set; }
         public ICollection<Photo> Photos { get; set; }
-        public ICollection<ShopWindow> ShopWindows { get; set; }
 
     }
 }

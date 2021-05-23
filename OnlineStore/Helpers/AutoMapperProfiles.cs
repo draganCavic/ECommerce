@@ -14,7 +14,14 @@ namespace OnlineStore.Helpers
         {
             CreateMap<RegisterDto, User>();
             CreateMap<UserUpdateDto, User>();
+            CreateMap<User, UserReturnDto>()
+                .ForMember(dest => dest.PhotoUrl, opt =>
+                {
+                    opt.MapFrom(src => src.Photo.Url);
+                });
             CreateMap<Product, ProductDto>();
+            CreateMap<Item, ItemDto>();
+            CreateMap<ItemDto, Item>();
             CreateMap<ProductCreateDto, Product>();
             CreateMap<Review, ReviewDto>()
                 .ForMember(dest => dest.PhotoUrl, opt => opt.MapFrom(src =>

@@ -1,4 +1,5 @@
-﻿using OnlineStore.Entities;
+﻿using OnlineStore.DTOs;
+using OnlineStore.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,8 +10,9 @@ namespace OnlineStore.Interfaces
     public interface IUserRepository
     {
         void Update(User user);
-        Task<IEnumerable<User>> GetUsersAsync();
+        Task<IEnumerable<UserReturnDto>> GetUsersAsync();
         Task<User> GetUserByIdAsync(int id);
         Task<User> GetUserByUsernameAsync(string username);
+        Task<User> GetUserByEmailAsync(string email);
     }
 }

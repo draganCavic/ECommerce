@@ -26,25 +26,33 @@ namespace OnlineStore.Controllers
             _photoService = photoService;
             _mapper = mapper;
         }
-
-        [HttpGet("{username}", Name = "GetUser")]
-        public async Task<ActionResult<User>> GetUser(string username)
+        //radi
+        [HttpGet("username/{username}", Name = "GetUserByName")]
+        public async Task<ActionResult<UserReturnDto>> GetUserByName(string username)
         {
             var user = await _unitOfWork.UserRepository.GetUserByUsernameAsync(username);
-            return user;
+            return _mapper.Map<UserReturnDto>(user);
         }
-
+        //radi
+        [HttpGet("email/{email}", Name = "GetUserByEmail")]
+        public async Task<ActionResult<UserReturnDto>> GetUserByEmail(string email)
+        {
+            var user = await _unitOfWork.UserRepository.GetUserByEmailAsync(email);
+            return _mapper.Map<UserReturnDto>(user);
+        }
+        //radi
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<User>>> GetUsers()
+        public async Task<ActionResult<IEnumerable<UserReturnDto>>> GetUsers()
         {
             var users = await _unitOfWork.UserRepository.GetUsersAsync();
 
             return Ok(users);
         }
-
-        [HttpPut]
-        public async Task<ActionResult> UpdateUser(UserUpdateDto userUpdateDto)
+        //radi
+        [HttpPut("{id}")]
+        public async Task<ActionResult> UpdateUser(int id, UserUpdateDto userUpdateDto)
         {
+            if (User.GetUserId() != id) return Unauthorized();
 
             var user = await _unitOfWork.UserRepository.GetUserByUsernameAsync(User.GetUsername());
 
@@ -56,7 +64,7 @@ namespace OnlineStore.Controllers
 
             return BadRequest("Failed to update user");
         }
-
+        //mrzi me
         [HttpPost("add-photo")]
         public async Task<ActionResult<Photo>> AddPhoto(IFormFile file)
         {
@@ -88,17 +96,13 @@ namespace OnlineStore.Controllers
 
             return BadRequest("Problem addding photo");
         }
-
-        [HttpGet("{userId}/wishlist")]
-        public async Task<ActionResult<IEnumerable<WishlistReturnDto>>> GetUserWishlist(int userId)
+        //radi
+        [HttpGet("wishlist")]
+        public async Task<ActionResult<IEnumerable<WishlistReturnDto>>> GetUserWishlist()
         {
-            if (userId != User.GetUserId()) return Unauthorized();
-
-            var product = await _unitOfWork.WishlistRepository.GetProductsAsync(userId);
-
-            return Ok(product);
+            return Ok(await _unitOfWork.WishlistRepository.GetProductsAsync(User.GetUserId()));
         }
-
+        //radi
         [HttpPost("wishlist/{productId}")]
         public async Task<ActionResult> AddProductToWishlist(int productId)
         {
@@ -112,7 +116,7 @@ namespace OnlineStore.Controllers
 
             return BadRequest("Failed to add product");
         }
-
+        //radi
         [HttpDelete("wishlist/{productId}")]
         public async Task<ActionResult> RemoveProductFromWishlist(int productId)
         {

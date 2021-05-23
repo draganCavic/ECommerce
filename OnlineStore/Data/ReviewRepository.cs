@@ -42,7 +42,7 @@ namespace OnlineStore.Data
 
         public async Task<Review> GetProductReview(int productId, int userId)
         {
-            return await _context.Reviews.FirstOrDefaultAsync(x => x.ProductId == productId && x.UserId == userId);
+            return await _context.Reviews.Include(p => p.User.Photo).FirstOrDefaultAsync(x => x.ProductId == productId && x.UserId == userId);
         }
     }
 }

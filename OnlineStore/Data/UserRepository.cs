@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
+using OnlineStore.DTOs;
 using OnlineStore.Entities;
 using OnlineStore.Interfaces;
 using System;
@@ -27,13 +29,20 @@ namespace OnlineStore.Data
 
         public async Task<User> GetUserByUsernameAsync(string username)
         {
-            return await _context.Users
+            return await _context.Users.Include(p => p.Photo)
                 .SingleOrDefaultAsync(x => x.UserName == username);
         }
 
-        public async Task<IEnumerable<User>> GetUsersAsync()
+        public async Task<User> GetUserByEmailAsync(string email)
+        {
+            return await _context.Users.Include(p => p.Photo)
+                .SingleOrDefaultAsync(x => x.Email == email);
+        }
+
+        public async Task<IEnumerable<UserReturnDto>> GetUsersAsync()
         {
             return await _context.Users
+                .ProjectTo<UserReturnDto>(_mapper.ConfigurationProvider)
                 .ToListAsync();
         }
 

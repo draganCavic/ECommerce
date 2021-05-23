@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using OnlineStore.DTOs;
@@ -12,6 +13,7 @@ using System.Threading.Tasks;
 
 namespace OnlineStore.Controllers
 {
+    [Authorize]
     public class ProductsController : BaseApiController
     {
         private readonly IMapper _mapper;
@@ -24,27 +26,27 @@ namespace OnlineStore.Controllers
             _photoService = photoService;
             _mapper = mapper;
         }
-
+        //radi
         [HttpGet("name/{name}")]
         public async Task<ActionResult<IEnumerable<ProductDto>>> GetProductsByName(string name)
         {
             return Ok(await _unitOfWork.ProductRepository.GetProductByNameAsync(name));
         }
-
-        [HttpGet("{id}", Name = "GetProduct")]
+        //radi
+        [HttpGet("{id}", Name = "GetProductById")]
         public async Task<ActionResult<ProductDto>> GetProductById(int id)
         {
             var product = await _unitOfWork.ProductRepository.GetProductByIdAsync(id);
 
             return _mapper.Map<ProductDto>(product);
         }
-
+        //radi
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Product>>> GetProducts()
         {
             return Ok(await _unitOfWork.ProductRepository.GetProductsAsync());
         }
-
+        //radi
         [HttpGet("users/{userId}")]
         public async Task<ActionResult<IEnumerable<Product>>> GetUserProducts(int userId)
         {
@@ -52,7 +54,7 @@ namespace OnlineStore.Controllers
 
             return Ok(product);
         }
-
+        //radi
         [HttpPost]
         public async Task<ActionResult> CreateProduct(ProductCreateDto productCreateDto)
         {
@@ -62,7 +64,7 @@ namespace OnlineStore.Controllers
 
             return BadRequest("Failed to create product");
         }
-
+        //radi
         [HttpPut("{productId}")]
         public async Task<ActionResult> UpdateProduct(int productId, ProductCreateDto productUpdateDto)
         {
@@ -78,7 +80,7 @@ namespace OnlineStore.Controllers
 
             return BadRequest("Failed to update product");
         }
-
+        //radi
         [HttpDelete("{productId}")]
         public async Task<ActionResult> DeleteProduct(int productId)
         {
@@ -92,7 +94,7 @@ namespace OnlineStore.Controllers
 
             return BadRequest("Failed to delete product");
         }
-
+        //mrziii me
         [HttpPost("{id}/add-photo")]
         public async Task<ActionResult<Photo>> AddPhoto(int id, IFormFile file)
         {
@@ -120,7 +122,7 @@ namespace OnlineStore.Controllers
 
             return BadRequest("Problem addding photo");
         }
-
+        //haahahahaaha
         [HttpDelete("{productId}/delete-photo/{photoId}")]
         public async Task<ActionResult> DeletePhoto(int productId, int photoId)
         {
@@ -142,7 +144,7 @@ namespace OnlineStore.Controllers
 
             return BadRequest("Failed to delete the photo");
         }
-
+        //radi
         [HttpGet("{productId}/reviews")]
         public async Task<ActionResult<ReviewDto>> GetReviews(int productId)
         {
@@ -150,7 +152,18 @@ namespace OnlineStore.Controllers
 
             return Ok(await _unitOfWork.ReviewRepository.GetProductReviews(productId));
         }
+        //radi
+        [HttpGet("{productId}/reviews/{userId}")]
+        public async Task<ActionResult<ReviewDto>> GetReview(int productId, int userId)
+        {
+            if (await _unitOfWork.ProductRepository.GetProductByIdAsync(productId) == null) return NotFound();
 
+            if (await _unitOfWork.UserRepository.GetUserByIdAsync(userId) == null) return NotFound();
+
+            var review = await _unitOfWork.ReviewRepository.GetProductReview(productId, userId);
+            return Ok(_mapper.Map<ReviewDto>(review));
+        }
+        //radi
         [HttpPost("{productId}/reviews")]
         public async Task<ActionResult> PostReview(int productId, ReviewCreateDto reviewDto)
         {
@@ -170,14 +183,16 @@ namespace OnlineStore.Controllers
             if (await _unitOfWork.Complete()) return NoContent();
             return BadRequest("Failed to post review");
         }
-
-        [HttpDelete("{productId}/reviews")]
-        public async Task<ActionResult> RemoveReview(int productId)
+        //radi
+        [HttpDelete("{productId}/reviews/{userId}")]
+        public async Task<ActionResult> RemoveReview(int productId, int userId)
         {
             var product = await _unitOfWork.ProductRepository.GetProductByIdAsync(productId);
             if (product == null) return NotFound();
 
-            var review = await _unitOfWork.ReviewRepository.GetProductReview(productId, User.GetUserId());
+            if (User.GetUserId() != userId) return Unauthorized();
+
+            var review = await _unitOfWork.ReviewRepository.GetProductReview(productId, userId);
             if (review == null) return NotFound();
 
             var count = (await _unitOfWork.ReviewRepository.GetProductReviews(productId)).Count();

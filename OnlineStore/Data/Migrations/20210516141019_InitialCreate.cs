@@ -261,27 +261,6 @@ namespace OnlineStore.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "ShopWindows",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    Description = table.Column<string>(type: "TEXT", nullable: true),
-                    Background = table.Column<string>(type: "TEXT", nullable: true),
-                    UserId = table.Column<int>(type: "INTEGER", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ShopWindows", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_ShopWindows_AspNetUsers_UserId",
-                        column: x => x.UserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Wishlists",
                 columns: table => new
                 {
@@ -301,30 +280,6 @@ namespace OnlineStore.Data.Migrations
                         name: "FK_Wishlists_Products_ProductId",
                         column: x => x.ProductId,
                         principalTable: "Products",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "ProductShopWindow",
-                columns: table => new
-                {
-                    ProductsId = table.Column<int>(type: "INTEGER", nullable: false),
-                    ShopWindowsId = table.Column<int>(type: "INTEGER", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ProductShopWindow", x => new { x.ProductsId, x.ShopWindowsId });
-                    table.ForeignKey(
-                        name: "FK_ProductShopWindow_Products_ProductsId",
-                        column: x => x.ProductsId,
-                        principalTable: "Products",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_ProductShopWindow_ShopWindows_ShopWindowsId",
-                        column: x => x.ShopWindowsId,
-                        principalTable: "ShopWindows",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -393,19 +348,9 @@ namespace OnlineStore.Data.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ProductShopWindow_ShopWindowsId",
-                table: "ProductShopWindow",
-                column: "ShopWindowsId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Reviews_ProductId",
                 table: "Reviews",
                 column: "ProductId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ShopWindows_UserId",
-                table: "ShopWindows",
-                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Wishlists_ProductId",
@@ -486,9 +431,6 @@ namespace OnlineStore.Data.Migrations
                 name: "Items");
 
             migrationBuilder.DropTable(
-                name: "ProductShopWindow");
-
-            migrationBuilder.DropTable(
                 name: "Reviews");
 
             migrationBuilder.DropTable(
@@ -499,9 +441,6 @@ namespace OnlineStore.Data.Migrations
 
             migrationBuilder.DropTable(
                 name: "Orders");
-
-            migrationBuilder.DropTable(
-                name: "ShopWindows");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");

@@ -9,7 +9,7 @@ using OnlineStore.Data;
 namespace OnlineStore.Data.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20210315210514_InitialCreate")]
+    [Migration("20210516141019_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -267,28 +267,6 @@ namespace OnlineStore.Data.Migrations
                     b.ToTable("AspNetRoles");
                 });
 
-            modelBuilder.Entity("OnlineStore.Entities.ShopWindow", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("Background")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("TEXT");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("INTEGER");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("ShopWindows");
-                });
-
             modelBuilder.Entity("OnlineStore.Entities.User", b =>
                 {
                     b.Property<int>("Id")
@@ -420,21 +398,6 @@ namespace OnlineStore.Data.Migrations
                     b.ToTable("Wishlists");
                 });
 
-            modelBuilder.Entity("ProductShopWindow", b =>
-                {
-                    b.Property<int>("ProductsId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("ShopWindowsId")
-                        .HasColumnType("INTEGER");
-
-                    b.HasKey("ProductsId", "ShopWindowsId");
-
-                    b.HasIndex("ShopWindowsId");
-
-                    b.ToTable("ProductShopWindow");
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
                 {
                     b.HasOne("OnlineStore.Entities.Role", null)
@@ -540,17 +503,6 @@ namespace OnlineStore.Data.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("OnlineStore.Entities.ShopWindow", b =>
-                {
-                    b.HasOne("OnlineStore.Entities.User", "User")
-                        .WithMany("ShopWindows")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("OnlineStore.Entities.User", b =>
                 {
                     b.HasOne("OnlineStore.Entities.Photo", "Photo")
@@ -598,21 +550,6 @@ namespace OnlineStore.Data.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("ProductShopWindow", b =>
-                {
-                    b.HasOne("OnlineStore.Entities.Product", null)
-                        .WithMany()
-                        .HasForeignKey("ProductsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("OnlineStore.Entities.ShopWindow", null)
-                        .WithMany()
-                        .HasForeignKey("ShopWindowsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("OnlineStore.Entities.Order", b =>
                 {
                     b.Navigation("Items");
@@ -638,8 +575,6 @@ namespace OnlineStore.Data.Migrations
                     b.Navigation("Orders");
 
                     b.Navigation("Products");
-
-                    b.Navigation("ShopWindows");
 
                     b.Navigation("UserRoles");
 

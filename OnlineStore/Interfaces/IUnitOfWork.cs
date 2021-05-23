@@ -11,6 +11,7 @@ namespace OnlineStore.Interfaces
         IProductRepository ProductRepository { get; }
         IWishlistRepository WishlistRepository { get; }
         IReviewRepository ReviewRepository { get; }
+        IOrderRepository OrderRepository { get; }
         Task<bool> Complete();
         bool HasChanges();
     }

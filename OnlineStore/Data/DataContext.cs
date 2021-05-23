@@ -20,7 +20,6 @@ namespace OnlineStore.Data
         public DbSet<Item> Items { get; set; }
         public DbSet<Wishlist> Wishlists { get; set; }
         public DbSet<Review> Reviews { get; set; }
-        public DbSet<ShopWindow> ShopWindows { get; set; }
         public DbSet<Photo> Photos { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
